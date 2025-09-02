@@ -50,17 +50,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
         animatedConstraint = textLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         
         if let textLabelCenterYConstraint = animatedConstraint {
-            NSLayoutConstraint.activate([
-                textLabelCenterYConstraint,
-                textLabel.heightAnchor.constraint(equalToConstant: 35),
-                
-                textField.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 16),
-                textField.heightAnchor.constraint(equalToConstant: 40),
-                
-                saveButton.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 16),
-                saveButton.heightAnchor.constraint(equalToConstant: 50)
-            ])
+            textLabelCenterYConstraint.isActive = true
         }
+        
+        NSLayoutConstraint.activate([
+            textLabel.heightAnchor.constraint(equalToConstant: 35),
+            
+            textField.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 16),
+            textField.heightAnchor.constraint(equalToConstant: 40),
+            
+            saveButton.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 16),
+            saveButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
