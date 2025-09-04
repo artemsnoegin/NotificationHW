@@ -47,19 +47,19 @@ class ViewController: UIViewController, UITextFieldDelegate {
             $0.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
         }
         
-        animatedConstraint = textLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        animatedConstraint = saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -view.bounds.height / 3)
         
-        if let textLabelCenterYConstraint = animatedConstraint {
-            textLabelCenterYConstraint.isActive = true
+        if let saveButtonBottomAnchor = animatedConstraint {
+            saveButtonBottomAnchor.isActive = true
         }
         
         NSLayoutConstraint.activate([
             textLabel.heightAnchor.constraint(equalToConstant: 35),
+            textLabel.bottomAnchor.constraint(equalTo: textField.topAnchor, constant: -16),
             
-            textField.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 16),
             textField.heightAnchor.constraint(equalToConstant: 40),
+            textField.bottomAnchor.constraint(equalTo: saveButton.topAnchor, constant: -16),
             
-            saveButton.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 16),
             saveButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
@@ -109,15 +109,25 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func keyboardWillShow(_ notification: Notification) {
-        UIView.animate(withDuration: 0.5) {
-            self.animatedConstraint?.constant = -60
-            self.view.layoutIfNeeded()
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
+        else { return }
+        
+        let keyboardHeight = keyboardFrame.height - view.safeAreaInsets.bottom + 16
+        print(keyboardHeight)
+        print(view.bounds.height / 3)
+        
+        if keyboardHeight > view.bounds.height / 3 {
+            UIView.animate(withDuration: 0.5) {
+                self.animatedConstraint?.constant = -keyboardHeight
+                self.view.layoutIfNeeded()
+            }
         }
     }
     
     @objc private func keyboardWillHide(_ notification: Notification) {
         UIView.animate(withDuration: 0.5) {
-            self.animatedConstraint?.constant = 0
+            self.animatedConstraint?.constant = -self.view.bounds.height / 3
             self.view.layoutIfNeeded()
         }
     }
